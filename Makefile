@@ -41,7 +41,7 @@ $(LO_OBJ_DIR)/%.o: $(LO)/%.c
 
 MAPPER = libmapper/src
 MAPPER_INCLUDE = libmapper/include
-MAPPER_FLAGS = -I$(COMPAT_INCLUDE) -I$(ZLIB_INCLUDE) -I$(LO_INCLUDE) -I$(MAPPER_INCLUDE) $(INCLUDES)
+MAPPER_FLAGS = -DDEBUG -I$(COMPAT_INCLUDE) -I$(ZLIB_INCLUDE) -I$(LO_INCLUDE) -I$(MAPPER_INCLUDE) $(INCLUDES)
 MAPPER_SRCS = database.c device.c expression.c link.c list.c map.c network.c properties.c router.c signal.c slot.c table.c timetag.c
 MAPPER_OBJ = $(MAPPER_SRCS:.c=.o)
 MAPPER_OBJ_DIR = $(BUILD_DIR)/mapper
@@ -50,7 +50,7 @@ $(MAPPER_OBJ_DIR)/%.o: $(MAPPER)/%.c
 	$(CC) $(CFLAGS) $(MAPPER_FLAGS) $< -o $@
 
 all: $(addprefix $(MAPPER_OBJ_DIR)/,$(MAPPER_OBJ)) $(addprefix $(LO_OBJ_DIR)/,$(LO_OBJ)) $(addprefix $(COMPAT_OBJ_DIR)/,$(COMPAT_OBJ)) $(addprefix $(ZLIB_OBJ_DIR)/,$(ZLIB_OBJ))
-	$(AR) cru $(BUILD_DIR)/$@.a $^
+	$(AR) cru $(BUILD_DIR)/libmapper.a $^
 
 clean:
 	rm -rf $(BUILD_DIR)/*.o
