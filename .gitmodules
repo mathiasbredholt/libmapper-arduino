@@ -1,0 +1,9 @@
+[submodule "libmapper"]
+	path = libmapper
+	url = https://github.com/libmapper/libmapper.git
+[submodule "zlib"]
+	path = zlib
+	url = https://github.com/madler/zlib.git
+[submodule "liblo"]
+	path = liblo
+	url = https://github.com/radarsat1/liblo.git
