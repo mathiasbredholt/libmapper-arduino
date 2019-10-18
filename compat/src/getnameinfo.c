@@ -52,9 +52,9 @@
  *
  */
 
-#include "lwip/netdb.h"
+#include "netdb.h"
 #include "lwip/ip_addr.h"
-#include "compat/compat.h"
+#include "compat.h"
 
 int
 getnameinfo(const struct sockaddr *sa, socklen_t salen,

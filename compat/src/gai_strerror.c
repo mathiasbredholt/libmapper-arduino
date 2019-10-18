@@ -1,3 +1,4 @@
+#include "compat.h"
 #include "lwip/netdb.h"
 
 const char *
@@ -15,6 +16,8 @@ gai_strerror(int errnum) {
         return "service not supported for ai_socktype";
     case EAI_MEMORY:
         return "memory allocation failure";
+    case EAI_SYSTEM:
+        return "system failure";
     default:
         return "unknown/invalid error";
     }

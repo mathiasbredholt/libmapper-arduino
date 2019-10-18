@@ -17,27 +17,30 @@ ZLIB_OBJ = $(ZLIB_SRCS:.c=.o)
 ZLIB_OBJ_DIR = $(BUILD_DIR)/zlib
 
 $(ZLIB_OBJ_DIR)/%.o: $(ZLIB)/%.c 
-	$(CC) $(CFLAGS) $(ZLIB_FLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) $(ZLIB_FLAGS) -c $< -o $@
+	@echo Building $<
 
 COMPAT = compat/src
-COMPAT_INCLUDE = compat/src
+COMPAT_INCLUDE = compat/include
 COMPAT_FLAGS = -I$(COMPAT_INCLUDE) $(INCLUDES)
 COMPAT_SRCS = gai_strerror.c gethostname.c getnameinfo.c ifaddrs.c
 COMPAT_OBJ = $(COMPAT_SRCS:.c=.o)
 COMPAT_OBJ_DIR = $(BUILD_DIR)/compat
 
 $(COMPAT_OBJ_DIR)/%.o: $(COMPAT)/%.c 
-	$(CC) $(CFLAGS) $(COMPAT_FLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) $(COMPAT_FLAGS) -c $< -o $@
+	@echo Building $<
 
 LO = liblo/src
 LO_INCLUDE = liblo
-LO_FLAGS = -I$(LO_INCLUDE) -I$(COMPAT_INCLUDE) $(INCLUDES)
+LO_FLAGS = -include $(COMPAT_INCLUDE)/compat.h -I$(LO_INCLUDE) -I$(COMPAT_INCLUDE) $(INCLUDES)
 LO_SRCS = address.c blob.c bundle.c message.c method.c pattern_match.c send.c server.c server_thread.c timetag.c version.c
 LO_OBJ = $(LO_SRCS:.c=.o)
 LO_OBJ_DIR = $(BUILD_DIR)/lo
 
 $(LO_OBJ_DIR)/%.o: $(LO)/%.c 
-	$(CC) $(CFLAGS) $(LO_FLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) $(LO_FLAGS) -c $< -o $@
+	@echo Building $<
 
 MAPPER = libmapper/src
 MAPPER_INCLUDE = libmapper/include
@@ -47,12 +50,23 @@ MAPPER_OBJ = $(MAPPER_SRCS:.c=.o)
 MAPPER_OBJ_DIR = $(BUILD_DIR)/mapper
 
 $(MAPPER_OBJ_DIR)/%.o: $(MAPPER)/%.c 
-	$(CC) $(CFLAGS) $(MAPPER_FLAGS) $< -o $@
+	@$(CC) $(CFLAGS) $(MAPPER_FLAGS) $< -o $@
+	@echo Building $<
 
 all: $(addprefix $(MAPPER_OBJ_DIR)/,$(MAPPER_OBJ)) $(addprefix $(LO_OBJ_DIR)/,$(LO_OBJ)) $(addprefix $(COMPAT_OBJ_DIR)/,$(COMPAT_OBJ)) $(addprefix $(ZLIB_OBJ_DIR)/,$(ZLIB_OBJ))
-	$(AR) cru $(BUILD_DIR)/libmapper.a $^
+	@$(AR) cru $(BUILD_DIR)/libmapper.a $^
+	@echo Linking $(BUILD_DIR)/libmapper.a
+
+install:
+	mv $(BUILD_DIR)/libmapper.a ~/Documents/Arduino/libraries/libmapper/src/esp32/libmapper.a
 
 clean:
-	rm -rf $(BUILD_DIR)/*.o
-	rm -rf $(BUILD_DIR)/*.d
+	rm -rf $(BUILD_DIR)/mapper/*.o
+	rm -rf $(BUILD_DIR)/mapper/*.d
+	rm -rf $(BUILD_DIR)/lo/*.o
+	rm -rf $(BUILD_DIR)/lo/*.d
+	rm -rf $(BUILD_DIR)/zlib/*.o
+	rm -rf $(BUILD_DIR)/zlib/*.d
+	rm -rf $(BUILD_DIR)/compat/*.o
+	rm -rf $(BUILD_DIR)/compat/*.d
 	rm -rf $(BUILD_DIR)/*.a

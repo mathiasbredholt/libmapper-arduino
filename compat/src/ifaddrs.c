@@ -13,7 +13,7 @@ int getifaddrs(struct ifaddrs **ifap) {
     // Name
     const int NAME_LENGTH = 16;
     ifa->ifa_name = malloc(NAME_LENGTH);
-    snprintf(ifa->ifa_name, NAME_LENGTH, "ESP32_WIFI");
+    snprintf(ifa->ifa_name, NAME_LENGTH, "ESP32_STA");
 
     // Address
     tcpip_adapter_ip_info_t ip_info;

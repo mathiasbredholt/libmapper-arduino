@@ -1,10 +1,10 @@
+#ifndef IF_ADDRS_H_
+#define IF_ADDRS_H_
+
 #include <string.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-
-#ifndef IF_ADDRS_H_
-#define IF_ADDRS_H_
 
 #define IFF_UP      0x1     /* interface is up      */
 #define IFF_BROADCAST   0x2     /* broadcast address valid  */
