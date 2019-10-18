@@ -3,8 +3,8 @@ An Arduino library for using libmapper
 
 ## Installation
 * Unzip libmapper.zip from [releases](https://github.com/mathiasbredholt/libmapper_arduino/releases) into Arduino libraries folder
-* Library is included in .ino file by using ```#include "mapper.h"```
-* Can be used using the C-api as described [here](http://libmapper.github.io/tutorials/c.html) 
+* Library is included in .ino file using ```#include "mapper.h"```
+* Use the C API as described [here](http://libmapper.github.io/tutorials/c.html) 
 
 ## Compile from source
 * Clone repository
