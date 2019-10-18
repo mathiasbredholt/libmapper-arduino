@@ -1,4 +1,3 @@
-.PHONY: all clean
 COMPILER_PATH = $(HOME)/Library/Arduino15/packages/esp32/tools/xtensa-esp32-elf-gcc/1.22.0-80-g6c4433a-5.2.0/bin
 SDK = $(HOME)/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk
 CC = $(COMPILER_PATH)/xtensa-esp32-elf-gcc
@@ -43,6 +42,7 @@ LO_FLAGS = -include $(COMPAT_INCLUDE)/compat.h -I$(LO_INCLUDE) -I$(COMPAT_INCLUD
 LO_SRCS = address.c blob.c bundle.c message.c method.c pattern_match.c send.c server.c server_thread.c timetag.c version.c
 LO_OBJ = $(LO_SRCS:.c=.o)
 LO_OBJ_DIR = $(BUILD_DIR)/liblo
+LO_CONFIGURED = $(shell [ -f liblo/config.h ] && echo "TRUE" || echo "FALSE")
 
 $(LO_OBJ_DIR)/%.o: $(LO)/%.c 
 	@mkdir -p $(LO_OBJ_DIR)
@@ -55,24 +55,15 @@ MAPPER_FLAGS = -DDEBUG -I$(COMPAT_INCLUDE) -I$(ZLIB_INCLUDE) -I$(LO_INCLUDE) -I$
 MAPPER_SRCS = database.c device.c expression.c link.c list.c map.c network.c properties.c router.c signal.c slot.c table.c timetag.c
 MAPPER_OBJ = $(MAPPER_SRCS:.c=.o)
 MAPPER_OBJ_DIR = $(BUILD_DIR)/libmapper
+MAPPER_CONFIGURED = $(shell [ -f libmapper/src/config.h ] && echo "TRUE" || echo "FALSE")
 
 $(MAPPER_OBJ_DIR)/%.o: $(MAPPER)/%.c
 	@mkdir -p $(MAPPER_OBJ_DIR)
 	@echo Building $<
 	@$(CC) $(CFLAGS) $(MAPPER_FLAGS) $< -o $@
 
-pre-build:
-	@mkdir -p $(OUTPUT_LIB_DIR)
-	@echo Configuring liblo
-	cd liblo
-	@./autogen.sh
-	@echo Configuring libmapper
-	cd ../libmapper
-	@libmapper/autogen.sh
-
-all: pre-build $(addprefix $(MAPPER_OBJ_DIR)/,$(MAPPER_OBJ)) $(addprefix $(LO_OBJ_DIR)/,$(LO_OBJ)) $(addprefix $(COMPAT_OBJ_DIR)/,$(COMPAT_OBJ)) $(addprefix $(ZLIB_OBJ_DIR)/,$(ZLIB_OBJ))
-	@$(AR) cru $(OUTPUT_LIB_DIR)/libmapper.a $^
-	@echo Linking $(OUTPUT_LIB_DIR)/libmapper.a
+.PHONY: all
+all: configure-liblo configure-libmapper libmapper_arduino
 	cp library.properties $(OUTPUT_DIR)/library.properties
 	cp mapper.h $(OUTPUT_SRC_DIR)/mapper.h
 	mkdir -p $(OUTPUT_SRC_DIR)/mapper
@@ -80,9 +71,34 @@ all: pre-build $(addprefix $(MAPPER_OBJ_DIR)/,$(MAPPER_OBJ)) $(addprefix $(LO_OB
 	mkdir -p $(OUTPUT_SRC_DIR)/lo
 	find $(LO_INCLUDE)/lo -name "*.h" -exec cp -prv {} $(OUTPUT_SRC_DIR)/lo/ ";"
 
+.PHONY: configure-liblo
+configure-liblo:
+ifeq ($(LO_CONFIGURED), TRUE)
+	@echo liblo: config.h was found
+else
+	@echo Configuring liblo
+	@cd liblo && ./autogen.sh
+endif
+
+.PHONY: configure-libmapper
+configure-libmapper:
+ifeq ($(MAPPER_CONFIGURED), TRUE)
+	@echo libmapper: config.h was found
+else
+	@echo Configuring libmapper
+	@cd libmapper && ./autogen.sh
+endif
+
+libmapper_arduino: $(addprefix $(MAPPER_OBJ_DIR)/,$(MAPPER_OBJ)) $(addprefix $(LO_OBJ_DIR)/,$(LO_OBJ)) $(addprefix $(COMPAT_OBJ_DIR)/,$(COMPAT_OBJ)) $(addprefix $(ZLIB_OBJ_DIR)/,$(ZLIB_OBJ))
+	@mkdir -p $(OUTPUT_LIB_DIR)
+	@$(AR) cru $(OUTPUT_LIB_DIR)/libmapper.a $^
+	@echo Linking $(OUTPUT_LIB_DIR)/libmapper.a
+
+.PHONY: install
 install:
 	mkdir -p ~/Documents/Arduino/libraries/libmapper
 	cp -R $(OUTPUT_DIR)/. ~/Documents/Arduino/libraries/libmapper
 
+.PHONY: clean
 clean:
 	rm -rf $(BUILD_DIR)
