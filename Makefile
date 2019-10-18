@@ -72,27 +72,31 @@ all: configure-liblo configure-libmapper libmapper_arduino
 	find $(LO_INCLUDE)/lo -name "*.h" -exec cp -prv {} $(OUTPUT_SRC_DIR)/lo/ ";"
 
 .PHONY: configure-liblo
+.NOTPARALLEL: configure-liblo
 configure-liblo:
 ifeq ($(LO_CONFIGURED), TRUE)
 	@echo liblo: config.h was found
 else
-	@echo Configuring liblo
+	@echo Configuring liblo...
 	@cd liblo && ./autogen.sh
 endif
 
 .PHONY: configure-libmapper
+.NOTPARALLEL: configure-libmapper
 configure-libmapper:
 ifeq ($(MAPPER_CONFIGURED), TRUE)
 	@echo libmapper: config.h was found
 else
-	@echo Configuring libmapper
+	@echo Configuring libmapper...
 	@cd libmapper && ./autogen.sh
 endif
 
+.PHONY: libmapper_arduino
+.NOTPARALLEL: libmapper_arduino
 libmapper_arduino: $(addprefix $(MAPPER_OBJ_DIR)/,$(MAPPER_OBJ)) $(addprefix $(LO_OBJ_DIR)/,$(LO_OBJ)) $(addprefix $(COMPAT_OBJ_DIR)/,$(COMPAT_OBJ)) $(addprefix $(ZLIB_OBJ_DIR)/,$(ZLIB_OBJ))
 	@mkdir -p $(OUTPUT_LIB_DIR)
-	@$(AR) cru $(OUTPUT_LIB_DIR)/libmapper.a $^
 	@echo Linking $(OUTPUT_LIB_DIR)/libmapper.a
+	@$(AR) cru $(OUTPUT_LIB_DIR)/libmapper.a $^
 
 .PHONY: install
 install:
