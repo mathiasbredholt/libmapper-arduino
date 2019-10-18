@@ -4,7 +4,7 @@ CC = $(COMPILER_PATH)/xtensa-esp32-elf-gcc
 AR = $(COMPILER_PATH)/xtensa-esp32-elf-ar
 
 BUILD_DIR = build
-OUTPUT_DIR = $(BUILD_DIR)/Arduino
+OUTPUT_DIR = $(BUILD_DIR)/Arduino/libmapper
 OUTPUT_SRC_DIR = $(OUTPUT_DIR)/src
 OUTPUT_LIB_DIR = $(OUTPUT_SRC_DIR)/esp32
 
