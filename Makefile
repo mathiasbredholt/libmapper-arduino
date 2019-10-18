@@ -1,3 +1,4 @@
+.PHONY: all clean
 COMPILER_PATH = $(HOME)/Library/Arduino15/packages/esp32/tools/xtensa-esp32-elf-gcc/1.22.0-80-g6c4433a-5.2.0/bin
 SDK = $(HOME)/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk
 CC = $(COMPILER_PATH)/xtensa-esp32-elf-gcc
@@ -21,8 +22,8 @@ ZLIB_OBJ_DIR = $(BUILD_DIR)/zlib
 
 $(ZLIB_OBJ_DIR)/%.o: $(ZLIB)/%.c 
 	@mkdir -p $(ZLIB_OBJ_DIR)
-	@$(CC) $(CFLAGS) $(ZLIB_FLAGS) -c $< -o $@
 	@echo Building $<
+	@$(CC) $(CFLAGS) $(ZLIB_FLAGS) -c $< -o $@
 
 COMPAT = compat/src
 COMPAT_INCLUDE = compat/include
@@ -33,8 +34,8 @@ COMPAT_OBJ_DIR = $(BUILD_DIR)/compat
 
 $(COMPAT_OBJ_DIR)/%.o: $(COMPAT)/%.c
 	@mkdir -p $(COMPAT_OBJ_DIR)
-	@$(CC) $(CFLAGS) $(COMPAT_FLAGS) -c $< -o $@
 	@echo Building $<
+	@$(CC) $(CFLAGS) $(COMPAT_FLAGS) -c $< -o $@
 
 LO = liblo/src
 LO_INCLUDE = liblo
@@ -45,8 +46,8 @@ LO_OBJ_DIR = $(BUILD_DIR)/liblo
 
 $(LO_OBJ_DIR)/%.o: $(LO)/%.c 
 	@mkdir -p $(LO_OBJ_DIR)
-	@$(CC) $(CFLAGS) $(LO_FLAGS) -c $< -o $@
 	@echo Building $<
+	@$(CC) $(CFLAGS) $(LO_FLAGS) -c $< -o $@
 
 MAPPER = libmapper/src
 MAPPER_INCLUDE = libmapper/include
@@ -57,11 +58,19 @@ MAPPER_OBJ_DIR = $(BUILD_DIR)/libmapper
 
 $(MAPPER_OBJ_DIR)/%.o: $(MAPPER)/%.c
 	@mkdir -p $(MAPPER_OBJ_DIR)
-	@$(CC) $(CFLAGS) $(MAPPER_FLAGS) $< -o $@
 	@echo Building $<
+	@$(CC) $(CFLAGS) $(MAPPER_FLAGS) $< -o $@
 
-all: $(addprefix $(MAPPER_OBJ_DIR)/,$(MAPPER_OBJ)) $(addprefix $(LO_OBJ_DIR)/,$(LO_OBJ)) $(addprefix $(COMPAT_OBJ_DIR)/,$(COMPAT_OBJ)) $(addprefix $(ZLIB_OBJ_DIR)/,$(ZLIB_OBJ))
+pre-build:
 	@mkdir -p $(OUTPUT_LIB_DIR)
+	@echo Configuring liblo
+	cd liblo
+	@./autogen.sh
+	@echo Configuring libmapper
+	cd ../libmapper
+	@libmapper/autogen.sh
+
+all: pre-build $(addprefix $(MAPPER_OBJ_DIR)/,$(MAPPER_OBJ)) $(addprefix $(LO_OBJ_DIR)/,$(LO_OBJ)) $(addprefix $(COMPAT_OBJ_DIR)/,$(COMPAT_OBJ)) $(addprefix $(ZLIB_OBJ_DIR)/,$(ZLIB_OBJ))
 	@$(AR) cru $(OUTPUT_LIB_DIR)/libmapper.a $^
 	@echo Linking $(OUTPUT_LIB_DIR)/libmapper.a
 	cp library.properties $(OUTPUT_DIR)/library.properties
