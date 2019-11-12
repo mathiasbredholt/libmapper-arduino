@@ -61,8 +61,8 @@ $(LIBMAPPER_OBJ_DIR)/%.o : $(LIBMAPPER_SRCS_DIR)/%.c
 
 all : $(COMPAT_OBJS) $(ZLIB_OBJS) $(LIBLO_OBJS) $(LIBMAPPER_OBJS)
 	@mkdir -p $(OUTPUT_LIB_DIR)
+	@rm $(OUTPUT_LIB_DIR)/libmapper.a || true
 	@echo Linking $(OUTPUT_LIB_DIR)/libmapper.a
-	@rm $(OUTPUT_LIB_DIR)/libmapper.a 2> /dev/null
 	@$(AR) cru $(OUTPUT_LIB_DIR)/libmapper.a $^
 	cp library.properties $(OUTPUT_DIR)/library.properties
 	cp -R examples $(OUTPUT_DIR)
