@@ -4,3 +4,6 @@
 [submodule "liblo"]
 	path = liblo
 	url = https://github.com/mathiasbredholt/liblo.git
+[submodule "libmapper"]
+	path = libmapper
+	url = https://github.com/mathiasbredholt/libmapper.git

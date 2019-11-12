@@ -38,7 +38,7 @@ LIBLO_CONFIGURED := $(shell [ -f liblo/config.h ] && echo "TRUE" || echo "FALSE"
 # libmapper
 LIBMAPPER_SRCS_DIR := ./libmapper/src
 LIBMAPPER_INCLUDE_DIR := ./libmapper/include
-LIBMAPPER_FLAGS := $(CFLAGS) -include $(COMPAT_INCLUDE_DIR)/compat.h -I$(LIBMAPPER_INCLUDE_DIR) -I$(COMPAT_INCLUDE_DIR) -I$(LIBLO_INCLUDE_DIR) -I$(ZLIB_INCLUDE_DIR) $(INCLUDES)
+LIBMAPPER_FLAGS := -DDEBUG $(CFLAGS) -include $(COMPAT_INCLUDE_DIR)/compat.h -I$(LIBMAPPER_INCLUDE_DIR) -I$(COMPAT_INCLUDE_DIR) -I$(LIBLO_INCLUDE_DIR) -I$(ZLIB_INCLUDE_DIR) $(INCLUDES)
 LIBMAPPER_OBJ_DIR := $(BUILD_DIR)/libmapper
 LIBMAPPER_OBJS := $(addprefix $(LIBMAPPER_OBJ_DIR)/,database.o device.o expression.o link.o list.o map.o network.o properties.o router.o signal.o slot.o table.o timetag.o)
 LIBMAPPER_CONFIGURED := $(shell [ -f libmapper/src/config.h ] && echo "TRUE" || echo "FALSE")
@@ -62,6 +62,7 @@ $(LIBMAPPER_OBJ_DIR)/%.o : $(LIBMAPPER_SRCS_DIR)/%.c
 all : $(COMPAT_OBJS) $(ZLIB_OBJS) $(LIBLO_OBJS) $(LIBMAPPER_OBJS)
 	@mkdir -p $(OUTPUT_LIB_DIR)
 	@echo Linking $(OUTPUT_LIB_DIR)/libmapper.a
+	@rm $(OUTPUT_LIB_DIR)/libmapper.a 2> /dev/null
 	@$(AR) cru $(OUTPUT_LIB_DIR)/libmapper.a $^
 	cp library.properties $(OUTPUT_DIR)/library.properties
 	cp -R examples $(OUTPUT_DIR)

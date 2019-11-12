@@ -1,8 +1,7 @@
 #include "compat.h"
 #include "lwip/netdb.h"
 
-const char *
-gai_strerror(int errnum) {
+const char *gai_strerror(int errnum) {
     switch (errnum) {
     case 0:
         return "no error";
