@@ -17,11 +17,11 @@ void setup() {
     // Initialize mapper device
     dev = mapper_device_new("ESP32", 0, 0);
 
-    int signal_min = 0;
-    int signal_max = 1023;
+    float signal_min = 0.0f;
+    float signal_max = 3.3f;
 
     // Add output signal with type integer and unit "V" (for voltage)
-    output_signal = mapper_device_add_output_signal(dev, "sensor_value", 1, 'i', "V", &signal_min, &signal_max);
+    output_signal = mapper_device_add_output_signal(dev, "sensor_value", 1, 'f', "V", &signal_min, &signal_max);
 }
 
 void loop() {
@@ -29,5 +29,5 @@ void loop() {
     mapper_device_poll(dev, 0);
 
     // Update signal with analog value
-    mapper_signal_update_int(output_signal, analogRead(A0));
+    mapper_signal_update_float(output_signal, analogRead(A0) / 1023.0f * 3.3f);
 }
