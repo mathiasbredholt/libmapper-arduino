@@ -11,8 +11,21 @@ mapper_device dev = 0;
 mapper_signal output_signal = 0;
 
 void setup() {
+    Serial.begin(115200);
+
     // Begin WiFi before creating mapper device
     WiFi.begin(ssid, password);
+
+    // Wait for connection
+    while (WiFi.status() != WL_CONNECTED) {
+        delay(500);
+        Serial.print(".");
+    }
+
+    Serial.println("");
+    Serial.println("WiFi connected");
+    Serial.println("IP address: ");
+    Serial.println(WiFi.localIP());
     
     // Initialize mapper device
     dev = mapper_device_new("ESP32", 0, 0);
