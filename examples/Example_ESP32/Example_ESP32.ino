@@ -1,6 +1,9 @@
 #include <WiFi.h>
 #include "mapper.h"
 
+// For disabling power saving
+#include "esp_wifi.h"
+
 const char* ssid     = "WIFI_SSID";
 const char* password = "WIFI_PASSWORD";
 
@@ -12,6 +15,9 @@ float received_value = 0;
 
 void setup() {
   WiFi.begin(ssid, password);
+
+  // Disable WiFi power save (huge latency improvements)
+  esp_wifi_set_ps(WIFI_PS_NONE)
 
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);

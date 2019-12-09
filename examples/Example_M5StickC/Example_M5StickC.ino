@@ -2,6 +2,9 @@
 #include <M5StickC.h>
 #include "mapper.h"
 
+// For disabling power saving
+#include "esp_wifi.h"
+
 const char* ssid     = "WIFI_SSID";
 const char* password = "WIFI_PASSWORD";
 
@@ -16,6 +19,9 @@ void setup() {
   M5.begin();
 
   WiFi.begin(ssid, password);
+
+  // Disable WiFi power save (huge latency improvements)
+  esp_wifi_set_ps(WIFI_PS_NONE)
 
   while (WiFi.status() != WL_CONNECTED) {
     M5.Lcd.fillScreen(ORANGE);

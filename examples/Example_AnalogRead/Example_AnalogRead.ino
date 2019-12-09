@@ -3,6 +3,9 @@
 #include "WiFi.h"
 #include "mapper.h"
 
+// For disabling power saving
+#include "esp_wifi.h"
+
 // WiFi ssid and password
 const char* ssid = "ssid";
 const char* password = "password";
@@ -15,6 +18,9 @@ void setup() {
 
     // Begin WiFi before creating mapper device
     WiFi.begin(ssid, password);
+
+    // Disable WiFi power save (huge latency improvements)
+    esp_wifi_set_ps(WIFI_PS_NONE)
 
     // Wait for connection
     while (WiFi.status() != WL_CONNECTED) {
