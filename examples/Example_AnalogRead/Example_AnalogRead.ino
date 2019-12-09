@@ -20,7 +20,7 @@ void setup() {
     WiFi.begin(ssid, password);
 
     // Disable WiFi power save (huge latency improvements)
-    esp_wifi_set_ps(WIFI_PS_NONE)
+    esp_wifi_set_ps(WIFI_PS_NONE);
 
     // Wait for connection
     while (WiFi.status() != WL_CONNECTED) {
