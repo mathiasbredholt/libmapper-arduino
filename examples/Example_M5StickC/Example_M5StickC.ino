@@ -48,13 +48,13 @@ void setup() {
 }
 
 void loop() {
-  mapper_device_poll(dev, 120);
+  mapper_device_poll(dev, 0);
   M5.Lcd.fillScreen(BLUE);
   seq_number = seq_number + 0.01f;
   mapper_signal_update_float(output_signal, seq_number);
   M5.Lcd.setCursor(0, 10);
   M5.Lcd.print(received_value);
-  //delay(10);
+  delay(100);
 }
 
 void input_signal_handler(mapper_signal sig, mapper_id instance, const void *value, int count, mapper_timetag_t *timetag) {

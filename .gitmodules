@@ -3,7 +3,7 @@
 	url = https://github.com/madler/zlib.git
 [submodule "liblo"]
 	path = liblo
-	url = https://github.com/mathiasbredholt/liblo.git
+	url = https://github.com/radarsat1/liblo.git
 [submodule "libmapper"]
 	path = libmapper
 	url = https://github.com/mathiasbredholt/libmapper.git
