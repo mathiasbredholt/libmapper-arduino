@@ -3,7 +3,7 @@ An Arduino library for using libmapper. Works with ESP32 Arduino only. Tested wi
 
 ## Installation
 * Unzip libmapper.zip from [releases](https://github.com/mathiasbredholt/libmapper_arduino/releases) into Arduino libraries folder
-* Library is included in .ino file using ```#include "mapper.h"```
+* Library is included in .ino file using ```#include <mapper.h>```
 * Use the C API as described [here](http://libmapper.github.io/tutorials/c.html) 
 
 ## Compile from source
