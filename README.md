@@ -17,5 +17,6 @@ git clone --recursive https://github.com/mathiasbredholt/libmapper-arduino.git
 mkdir build
 cd build
 cmake ..
+make
 ```
 * The Arduino library will be compiled to build/Arduino/libmapper
