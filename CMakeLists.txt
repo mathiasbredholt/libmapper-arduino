@@ -10,22 +10,26 @@ set(ZLIB_SRCS zlib/crc32.c)
 
 set(SRCS ${COMPAT_SRCS} ${LIBLO_SRCS} ${LIBMAPPER_SRCS} ${ZLIB_SRCS})
 
-include_directories(liblo liblo/src libmapper/include compat-idf/include zlib ${IDF_INCLUDES})
+include_directories(libmapper/include liblo compat-idf/include zlib ${IDF_INCLUDES})
 
 add_library(mapper STATIC ${SRCS})
 
 get_filename_component(compat_include compat-idf/include/compat.h ABSOLUTE)
-target_compile_options(mapper PRIVATE -DHAVE_CONFIG_H -include${compat_include} -w)
+target_compile_options(mapper PRIVATE -DHAVE_CONFIG_H -include${compat_include})
 
 add_custom_command(OUTPUT liblo/config.h
-                   COMMAND cp liblo_config.h liblo/config.h)
+                   COMMAND cp liblo_config.h liblo/config.h
+                   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 add_custom_command(OUTPUT liblo/lo/lo.h
-                   COMMAND cp lo.h liblo/lo/lo.h)
+                   COMMAND cp lo.h liblo/lo/lo.h
+                   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 add_custom_command(OUTPUT liblo/lo/lo_endian.h
-                   COMMAND cp lo_endian.h liblo/lo/lo_endian.h)
+                   COMMAND cp lo_endian.h liblo/lo/lo_endian.h
+                   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 add_custom_command(OUTPUT libmapper/src/config.h
-                   COMMAND cp libmpr_config.h libmapper/src/config.h)
+                   COMMAND cp libmapper_config.h libmapper/src/config.h
+                   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_custom_target(libmapper_config_headers DEPENDS liblo/config.h liblo/lo/lo.h liblo/lo/lo_endian.h libmapper/src/config.h)
-
+add_dependencies(mapper libmapper_config_headers)
 add_custom_command(TARGET mapper POST_BUILD COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/genlib.sh)

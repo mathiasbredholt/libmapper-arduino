@@ -89,25 +89,28 @@
 #define LT_OBJDIR ".libs/"
 
 /* Name of package */
-#define PACKAGE "libmpr"
+#define PACKAGE "libmapper"
 
 /* Define to the address where bug reports for this package should be sent. */
 #define PACKAGE_BUGREPORT "dot_mapper@googlegroups.com"
 
 /* Define to the full name of this package. */
-#define PACKAGE_NAME "libmpr"
+#define PACKAGE_NAME "libmapper"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "libmpr 1.2"
+#define PACKAGE_STRING "libmapper 1.2"
 
 /* Define to the one symbol short name of this package. */
-#define PACKAGE_TARNAME "libmpr"
+#define PACKAGE_TARNAME "libmapper"
 
 /* Define to the home page for this package. */
 #define PACKAGE_URL "http://libmapper.org"
 
 /* Define to the version of this package. */
 #define PACKAGE_VERSION "1.2"
+
+/* printf code for type long long int */
+#define PRINTF_LL "ll"
 
 /* Define to necessary symbol if this constant uses a non-standard name on
    your system. */
