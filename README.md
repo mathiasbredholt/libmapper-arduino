@@ -1,4 +1,4 @@
-# libmapper_arduino
+# libmapper-arduino
 An Arduino library for using libmapper. Works with ESP32 Arduino only. Tested with arduino-esp32 v1.0.4.
 
 ## Installation
