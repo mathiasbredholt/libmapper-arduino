@@ -7,3 +7,6 @@
 [submodule "libmapper"]
 	path = libmapper
 	url = https://github.com/mathiasbredholt/libmapper.git
+[submodule "compat-idf"]
+	path = compat-idf
+	url = https://github.com/mathiasbredholt/compat-idf.git
