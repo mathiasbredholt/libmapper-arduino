@@ -14,7 +14,8 @@ git clone --recursive https://github.com/mathiasbredholt/libmapper_arduino.git
 * Until the issue in https://github.com/mathiasbredholt/libmapper_arduino/issues/3 gets fixed the file in `~/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/lwip/arpa/inet.h` needs to be updated as described in the issue.
 * Run
 ```
-make
+mkdir build
+cd build
+cmake ..
 ```
-* The Makefile will configure liblo and libmapper
 * The Arduino library will be compiled to build/Arduino/libmapper
