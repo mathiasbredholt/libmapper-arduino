@@ -35,4 +35,4 @@ add_dependencies(mapper libmapper_config_headers)
 add_custom_command(TARGET mapper POST_BUILD COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/genlib.sh)
 
 install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/Arduino/libmapper DESTINATION ${ARDUINO_LIBRARY_PATH})
-install(TARGETS mapper DESTINATION ${ARDUINO_LIBRARY_PATH}/libmapper)
+install(TARGETS mapper DESTINATION ${ARDUINO_LIBRARY_PATH}/libmapper/src/esp32)
