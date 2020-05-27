@@ -33,3 +33,6 @@ add_custom_command(OUTPUT libmapper/src/config.h
 add_custom_target(libmapper_config_headers DEPENDS liblo/config.h liblo/lo/lo.h liblo/lo/lo_endian.h libmapper/src/config.h)
 add_dependencies(mapper libmapper_config_headers)
 add_custom_command(TARGET mapper POST_BUILD COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/genlib.sh)
+
+install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/Arduino/libmapper DESTINATION ${ARDUINO_LIBRARY_PATH})
+install(TARGETS mapper DESTINATION ${ARDUINO_LIBRARY_PATH}/libmapper)
