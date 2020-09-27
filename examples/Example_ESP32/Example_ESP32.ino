@@ -4,14 +4,14 @@
 // For disabling power saving
 #include "esp_wifi.h"
 
-const char* ssid     = "WIFI_SSID";
+const char* ssid = "WIFI_SSID";
 const char* password = "WIFI_PASSWORD";
 
-mapper_device dev = 0;
-mapper_signal input_signal = 0;
-mapper_signal output_signal = 0;
-float seq_number = 0;
-float received_value = 0;
+mpr_dev dev = 0;
+mpr_sig inputSignal = 0;
+mpr_sig outputSignal = 0;
+float seqNumber = 0;
+float receivedValue = 0;
 
 void setup() {
   WiFi.begin(ssid, password);
@@ -23,26 +23,34 @@ void setup() {
     delay(500);
   }
 
-  float min = 0.0f;
-  float max = 5.0f;
+  float signalMin = 0.0f;
+  float signalMax = 5.0f;
 
-  dev = mapper_device_new("ESP32", 0, 0);
-  output_signal = mapper_device_add_output_signal(dev, "value_to_send", 1, 'f', "V", &min, &max);
-  input_signal = mapper_device_add_input_signal(dev, "value_received", 1, 'f', 0, &min, &max, input_signal_handler, 0);
+  dev = mpr_dev_new("ESP32", 0);
+  outputSignal = mpr_sig_new(dev, MPR_DIR_OUT, "valueToSend", 1, MPR_FLT, "V",
+                             &signalMin, &signalMax, 0, 0, 0);
+  inputSignal = mpr_sig_new(dev, MPR_DIR_OUT, "valueReceived", 1, MPR_FLT, "V",
+                            &signalMin, &signalMax, 0, inputSignalHandler,
+                            MPR_SIG_UPDATE);
 }
 
 void loop() {
-  mapper_device_poll(dev, 0);
-  seq_number = seq_number + 0.01f;
-  mapper_signal_update_float(output_signal, seq_number);
+  // Update libmapper device
+  mpr_dev_poll(dev, 0);
+
+  // Increment number and send
+  seqNumber += 0.01f;
+  mpr_sig_set_value(outputSignal, 0, 1, MPR_FLT, &seqNumber);
+
+  // Print received value
+  Serial.print("received: ");
+  Serial.println(receivedValue);
+
+  // Wait 100 ms
   delay(100);
 }
 
-void input_signal_handler(mapper_signal sig, mapper_id instance, const void *value, int count, mapper_timetag_t *timetag) {
-  if (value) {
-    float *v = (float*)value;
-    for (int i = 0; i < mapper_signal_length(sig); i++) {
-      received_value = v[i];
-    }
-  }
+void inputSignalHandler(mpr_sig sig, mpr_sig_evt evt, mpr_id inst, int length,
+                        mpr_type type, const void* value, mpr_time time) {
+  receivedValue = *((float*)value);
 }

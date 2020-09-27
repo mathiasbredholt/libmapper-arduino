@@ -7,6 +7,8 @@
 [submodule "libmapper"]
 	path = libmapper
 	url = https://github.com/mathiasbredholt/libmapper.git
+  branch = maplooper
 [submodule "compat-idf"]
 	path = compat-idf
 	url = https://github.com/mathiasbredholt/compat-idf.git
+  branch = v4.0
