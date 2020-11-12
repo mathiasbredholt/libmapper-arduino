@@ -4,7 +4,7 @@
 - Tested with arduino-esp32 v1.0.4.
 
 ## Installation
-* Unzip libmapper.zip from [releases](https://github.com/mathiasbredholt/libmapper-arduino/releases) into Arduino libraries folder
+* Clone or download this repository as zip into libraries folder
 * Library is included in .ino file using ```#include <mapper.h>```
 * Use the C API as described [here](http://libmapper.github.io/tutorials/c.html) 
 
