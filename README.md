@@ -19,7 +19,7 @@ extern "C" void app_main()
 }
 ```
 
-## Compile from source
+## Compile from source (does not work right now)
 * Clone repository
 ```
 git clone --recursive https://github.com/mathiasbredholt/libmapper-arduino.git
