@@ -14,6 +14,7 @@ float seqNumber = 0;
 float receivedValue = 0;
 
 void setup() {
+  Serial.begin(115200);
   WiFi.begin(ssid, password);
 
   // Disable WiFi power save (huge latency improvements)
