@@ -10,12 +10,12 @@ set(ZLIB_SRCS zlib/crc32.c)
 
 set(SRCS ${COMPAT_SRCS} ${LIBLO_SRCS} ${LIBMAPPER_SRCS} ${ZLIB_SRCS})
 
-include_directories(libmapper/include liblo compat-idf/include zlib ${IDF_INCLUDES})
+include_directories(libmapper/include liblo compat-idf/include zlib)
 
 add_library(mapper STATIC ${SRCS})
 
-get_filename_component(compat_include compat-idf/include/compat.h ABSOLUTE)
-target_compile_options(mapper PRIVATE -DHAVE_CONFIG_H -include${compat_include})
+get_filename_component(COMPAT_H compat-idf/include/compat.h ABSOLUTE)
+target_compile_options(mapper PRIVATE -DHAVE_CONFIG_H -include${COMPAT_H})
 
 add_custom_command(OUTPUT liblo/config.h
                    COMMAND cp liblo_config.h liblo/config.h
