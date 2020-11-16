@@ -8,7 +8,8 @@
 * Library is included in .ino file using ```#include <mapper.h>```
 * Use the C API as described [here](http://libmapper.github.io/tutorials/c.html) 
 
-## Stack overflow in loopTask
+## Issues
+### Stack overflow in loopTask
 * https://github.com/mathiasbredholt/libmapper-arduino/issues/2
 * The stack size of the main loopTask in arduino-esp32 is 8192 bytes . It should be increased, but this can only be done locally at the moment.
 * It can be changed in `hardware/esp32/1.0.4/cores/esp32/main.cpp`. The following works for me:
@@ -20,7 +21,27 @@ extern "C" void app_main()
     xTaskCreateUniversal(loopTask, "loopTask", 16384, NULL, 1, &loopTaskHandle, CONFIG_ARDUINO_RUNNING_CORE);
 }
 ```
+### fatal error: ../../../lwip/src/include/lwip/inet.h: No such file or directory
+- https://github.com/mathiasbredholt/libmapper-arduino/issues/3
+The file inet.h should be changed from
+```
+#ifndef INET_H_
+#define INET_H_
 
+#include "../../../lwip/src/include/lwip/inet.h"
+
+#endif /* INET_H_ */
+```
+to
+```
+#ifndef INET_H_
+#define INET_H_
+
+#include "lwip/inet.h"
+
+#endif /* INET_H_ */
+```
+- This issue is fixed in newer versions of esp-idf and will eventually be fixed in arduino-esp32.
 ## Compile from source (does not work right now)
 * Clone repository
 ```
