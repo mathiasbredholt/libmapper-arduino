@@ -36,7 +36,7 @@ extern const char* prop_msg_strings[MPR_PROP_EXTRA+1];
 #define BUNDLE_DST_SUBSCRIBERS (void*)-1
 #define BUNDLE_DST_BUS          0
 
-#define MAX_BUNDLE_COUNT 10
+#define MAX_BUNDLE_COUNT 4
 
 #if FORCE_COMMS_TO_BUS
     #define NET_SERVER_FUNC(NET, FUNC, ...)                     \
