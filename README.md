@@ -23,7 +23,7 @@ extern "C" void app_main()
 ```
 ### fatal error: ../../../lwip/src/include/lwip/inet.h: No such file or directory
 - https://github.com/mathiasbredholt/libmapper-arduino/issues/3
-The file inet.h should be changed from
+- The file inet.h should be changed from
 ```
 #ifndef INET_H_
 #define INET_H_
