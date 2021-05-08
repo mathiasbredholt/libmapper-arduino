@@ -41,7 +41,7 @@ to
 
 #endif /* INET_H_ */
 ```
-- This issue is fixed in newer versions of esp-idf and will eventually be fixed in arduino-esp32.
+- This issue is fixed in newer versions of esp-idf and is fixed in arduino-esp32 v2.0.
 ## Compile from source (does not work right now)
 * Clone repository
 ```
