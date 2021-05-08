@@ -1,4 +1,4 @@
-#include "compat.h"
+#include <compat.h>
 /*
  *  Copyright (C) 2014 Steve Harris et al. (see AUTHORS)
  *
@@ -1974,7 +1974,7 @@ static void dispatch_method(lo_server s, const char *path,
                    to others.
                  */
                 pptr = path;
-                if (it->path)
+                if (it->path && !it->has_pattern)
                     pptr = it->path;
                 ret = it->handler(pptr, types, msg->argv, argc, msg,
                                   it->user_data);

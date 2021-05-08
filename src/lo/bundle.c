@@ -1,4 +1,4 @@
-#include "compat.h"
+#include <compat.h>
 /*
  *  Copyright (C) 2014 Steve Harris et al. (see AUTHORS)
  *

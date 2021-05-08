@@ -1,4 +1,4 @@
-#include "compat.h"
+#include <compat.h>
 /*
  *  Copyright (C) 2014 Steve Harris et al. (see AUTHORS)
  *
@@ -529,7 +529,7 @@ static void *lo_message_add_data(lo_message m, size_t s)
 
 int lo_strsize(const char *s)
 {
-    return 4 * (strlen(s) / 4 + 1);
+    return (NULL != s)? (4 * (strlen(s) / 4 + 1)) : 0;
 }
 
 size_t lo_arg_size(lo_type type, void *data)

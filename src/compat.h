@@ -17,13 +17,7 @@
 
 */
 
-#ifndef COMPAT_H
-#define COMPAT_H
-
-#include <stdlib.h>
-
 const char *gai_strerror(int);
-int gethostname(char *name, size_t len);
 
 #ifndef EAI_BADFLAGS
 #define EAI_BADFLAGS 205
@@ -52,10 +46,3 @@ int gethostname(char *name, size_t len);
 #ifndef PF_UNIX
 #define PF_UNIX AF_UNIX
 #endif
-
-#ifndef HAVE_CONFIG_H
-#define HAVE_CONFIG_H
-#endif
-
-#endif
-
