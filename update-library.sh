@@ -5,6 +5,7 @@ rm -rf src
 mkdir src
 
 cp mapper.h src/mapper.h
+cp mapper_cpp.h src/mapper_cpp.h
 
 mkdir -p tmp
 cd tmp
