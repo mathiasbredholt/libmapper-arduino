@@ -9,18 +9,6 @@
 * Use the C API as described [here](http://libmapper.github.io/tutorials/c.html) 
 
 ## Issues
-### Stack overflow in loopTask
-* https://github.com/mathiasbredholt/libmapper-arduino/issues/2
-* The stack size of the main loopTask in arduino-esp32 is 8192 bytes . It should be increased, but this can only be done locally at the moment.
-* It can be changed in `hardware/esp32/1.0.4/cores/esp32/main.cpp`. The following works for me:
-```
-extern "C" void app_main()
-{
-    loopTaskWDTEnabled = false;
-    initArduino();
-    xTaskCreateUniversal(loopTask, "loopTask", 16384, NULL, 1, &loopTaskHandle, CONFIG_ARDUINO_RUNNING_CORE);
-}
-```
 ### fatal error: ../../../lwip/src/include/lwip/inet.h: No such file or directory
 - https://github.com/mathiasbredholt/libmapper-arduino/issues/3
 - The file {Arduino hardware path}/esp32/1.0.6/tools/sdk/include/lwip/arpa/inet.h should be changed from
@@ -42,17 +30,5 @@ to
 #endif /* INET_H_ */
 ```
 - This issue is fixed in newer versions of esp-idf and is fixed in arduino-esp32 v2.0.
-## Compile from source (does not work right now)
-* Clone repository
-```
-git clone --recursive https://github.com/mathiasbredholt/libmapper-arduino.git
-```
-* Until the issue in https://github.com/mathiasbredholt/libmapper-arduino/issues/3 gets fixed the file in `~/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/lwip/arpa/inet.h` needs to be updated as described in the issue.
-* Run
-```
-mkdir build
-cd build
-cmake ..
-make
-```
-* The Arduino library will be compiled to build/Arduino/libmapper
+## Updating library 
+- Run `update-library.sh`
