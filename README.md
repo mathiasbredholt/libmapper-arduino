@@ -5,8 +5,14 @@
 
 ## Installation
 * Clone or download this repository as zip into libraries folder
-* Library is included in .ino file using ```#include <mapper.h>```
-* Use the C API as described [here](http://libmapper.github.io/tutorials/c.html) 
+
+### C++ API
+* To use the C++ API, add ```#include <mapper_cpp.h>``` to .ino file
+* A tutorial for libmapper C++ API is found [here](http://libmapper.github.io/tutorials/cpp.html)
+
+### C API
+* To use the C API, add ```#include <mapper.h>``` to .ino file
+* A tutorial for libmapper C API is found [here](http://libmapper.github.io/tutorials/c.html)
 
 ## Issues
 ### fatal error: ../../../lwip/src/include/lwip/inet.h: No such file or directory
