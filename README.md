@@ -1,7 +1,7 @@
 # libmapper-arduino <img style="float:right;padding:10px" src="http://libmapper.github.io/images/libmapper_logo_black_512px.png" width="100">
 - An Arduino library for using libmapper.
 - Works with ESP32 only.
-- Tested with arduino-esp32 v1.0.4.
+- Tested with arduino-esp32 v1.0.6.
 
 ## Installation
 * Clone or download this repository as zip into libraries folder
