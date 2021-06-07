@@ -350,6 +350,8 @@ namespace mapper {
 
         T operator*()
             { return _list ? T(*_list) : T(NULL); }
+        operator T()
+            { return _list ? T(*_list) : T(NULL); }
 
         /*! Retrieve an indexed item in the List.
          *  \param idx           The index of the element to retrieve.
@@ -400,6 +402,11 @@ namespace mapper {
             { return _obj; }
         bool operator == (Object o) const
             { return _obj == o._obj; }
+
+        /*! Cast to a boolean value based on whether the underlying C object exists.
+         *  \return         True if object exists, otherwise false. */
+        operator bool() const
+            { return _obj ? true : false; }
 
         /*! Get the specific type of an Object.
          *  \return         Object type. */
@@ -613,11 +620,6 @@ namespace mapper {
         operator mpr_map() const
             { return _obj; }
 
-        /*! Cast to a boolean value based on whether the underlying C map exists.
-         *  \return         True if mpr_map exists, otherwise false. */
-        operator bool() const
-            { return _obj; }
-
         /*! Re-create stale map if necessary.
          *  \return         Self. */
         const Map& refresh() const
@@ -634,8 +636,7 @@ namespace mapper {
             { return mpr_map_get_is_ready(_obj); }
 
 //        /*! Get the scopes property for a this map.
-//         *  \return       A List containing the list of results.  Use
-//         *                List::next() to iterate. */
+//         *  \return       A List containing the list of results.  Use List::next() to iterate. */
 //        List<Device> scopes() const
 //            { return List<Device>((void**)mpr_map_scopes(_obj)); }
 
@@ -710,8 +711,6 @@ namespace mapper {
         Signal(mpr_sig sig) : Object(sig) {}
         operator mpr_sig() const
             { return _obj; }
-        operator bool() const
-            { return _obj ? true : false; }
         inline Device device() const;
         List<Map> maps(Direction dir = Direction::ANY) const
             { return List<Map>(mpr_sig_get_maps(_obj, static_cast<mpr_dir>(dir))); }
@@ -1093,7 +1092,7 @@ namespace mapper {
         Device& remove_signal(Signal& sig)
         {
             sig.set_callback();
-            mpr_sig_free(sig);
+            mpr_sig_free(sig._obj);
             RETURN_SELF
         }
 
@@ -1381,14 +1380,14 @@ namespace mapper {
         ~PropVal()
             { maybe_free(); }
 
-        template <typename T>
-        operator const T() const
-            { return *(const T*)val; }
-        operator const bool() const
+        operator bool() const
         {
             if (!len || !type || !val)
                 return false;
+            if (len > 1)
+                return true;
             switch (type) {
+                case MPR_BOOL:
                 case MPR_INT32: return *(int*)val != 0;
                 case MPR_FLT:   return *(float*)val != 0.f;
                 case MPR_DBL:   return *(double*)val != 0.;
@@ -1396,8 +1395,11 @@ namespace mapper {
             }
         }
         template <typename T>
-        operator const T*() const
-            { return (const T*)(len > 1 ? val : &val); }
+        operator T*() const
+            { return (T*)(len > 1 ? val : &val); }
+        template <typename T>
+        operator T() const
+            { return *(T*)val; }
         operator const char*() const
         {
             if (!val || !len || type != MPR_STR)
@@ -1563,7 +1565,7 @@ namespace mapper {
             type = _type;
             val = _val;
             len = _len;
-            pub = (MPR_PTR == _type);
+            pub = (MPR_PTR != _type);
             maybe_update();
         }
         void _set(int _len, bool _val[])
@@ -1733,9 +1735,6 @@ namespace mapper {
         return p;
     }
 
-    /*! Retrieve a PropVal by index.
-     *  \param prop     The index or symbolic identifier of the PropVal to retrieve.
-     *  \return         The retrieved PropVal. */
     inline PropVal Object::property(Property prop) const
     {
         const char *key;

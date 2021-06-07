@@ -435,8 +435,7 @@ void mpr_net_send(mpr_net net)
                 /* subscription expired, remove from subscriber list */
 #ifdef DEBUG
                 char *addr = lo_address_get_url((*sub)->addr);
-                trace_dev(net->addr.dev, "removing expired subscription from "
-                          "%s\n", addr);
+                trace_dev(net->addr.dev, "removing expired subscription from %s\n", addr);
                 free(addr);
 #endif
                 mpr_subscriber temp = *sub;
@@ -832,6 +831,8 @@ static int handler_dev(const char *path, const char *types, lo_arg **av, int ac,
     if (!net->devs)
         goto done;
     for (i = 0; i < net->num_devs; i++) {
+        if (!mpr_dev_get_is_ready((mpr_dev)net->devs[i]))
+            continue;
         if (0 == strcmp(&av[0]->s, mpr_dev_get_name((mpr_dev)net->devs[i])))
             break;
     }
@@ -888,6 +889,7 @@ static int handler_dev(const char *path, const char *types, lo_arg **av, int ac,
         mpr_link link = (mpr_link)*cpy;
         cpy = mpr_list_get_next(cpy);
         if (mpr_link_get_is_local(link)) {
+            trace_dev(dev, "establishing link to %s.\n", name)
             mpr_link_connect(link, host, atoi(admin_port), data_port);
             found = 1;
             break;
@@ -901,6 +903,7 @@ static int handler_dev(const char *path, const char *types, lo_arg **av, int ac,
         inform_device_subscribers(net, dev);
 
     /* check if we have maps waiting for this link */
+    trace_dev(dev, "checking for waiting maps.\n");
     rs = net->rtr->sigs;
     while (rs) {
         for (i = 0; i < rs->num_slots; i++) {
@@ -1377,11 +1380,11 @@ static int parse_sig_names(const char *types, lo_arg **av, int ac, int *src_idx,
     /* Check that all signal names are well formed, and that no signal names
      * appear in both source and destination lists. */
     for (i = 0; i < num_src; i++) {
-        TRACE_RETURN_UNLESS(strchr((&av[*src_idx+i]->s)+1, '/'), 0, "malformed "
-                            "source signal name '%s'.\n", &av[*src_idx+i]->s);
+        TRACE_RETURN_UNLESS(strchr((&av[*src_idx+i]->s)+1, '/'), 0,
+                            "malformed source signal name '%s'.\n", &av[*src_idx+i]->s);
         TRACE_RETURN_UNLESS(strcmp(&av[*src_idx+i]->s, &av[*dst_idx]->s), 0,
-                            "prevented attempt to connect signal '%s' to "
-                            "itself.\n", &av[*dst_idx]->s);
+                            "prevented attempt to connect signal '%s' to itself.\n",
+                            &av[*dst_idx]->s);
     }
     TRACE_RETURN_UNLESS(strchr((&av[*dst_idx]->s)+1, '/'), 0, "malformed "
                         "destination signal name '%s'.\n", &av[*dst_idx]->s)
@@ -1550,8 +1553,10 @@ static int handler_map(const char *path, const char *types, lo_arg **av, int ac,
             if (map->src[i]->rsig)
                 continue;
             /* do not send if device host/port not yet known */
-            if (!map->src[i]->link || !map->src[i]->link->addr.admin)
+            if (!map->src[i]->link || !map->src[i]->link->addr.admin) {
+                trace_dev(dev, "delaying map handshake while waiting for network link.\n");
                 continue;
+            }
             mpr_net_use_mesh(net, map->src[i]->link->addr.admin);
             i = mpr_map_send_state((mpr_map)map, i, MSG_MAP_TO);
             mpr_sig_send_state(sig, MSG_SIG);

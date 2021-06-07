@@ -10,7 +10,7 @@
 #include "types_internal.h"
 #include <mapper/mapper.h>
 
-#define MAX_LEN 512
+#define MAX_LEN 1024
 #define MPR_STATUS_LENGTH_KNOWN 0x04
 #define MPR_STATUS_TYPE_KNOWN   0x08
 #define MPR_STATUS_LINK_KNOWN   0x10
@@ -101,6 +101,7 @@ void mpr_map_init(mpr_map m)
     }
     mpr_tbl_set(t, PROP(IS_LOCAL), NULL, 1, MPR_BOOL, &is_local,
                 LOCAL_ACCESS_ONLY | NON_MODIFIABLE);
+    m->status = MPR_STATUS_STAGED;
 }
 
 mpr_map mpr_map_new(int num_src, mpr_sig *src, int num_dst, mpr_sig *dst)
@@ -194,7 +195,6 @@ mpr_map mpr_map_new(int num_src, mpr_sig *src, int num_dst, mpr_sig *dst)
         m->obj.id = mpr_dev_generate_unique_id((*dst)->dev);
 
     mpr_map_init(m);
-    m->status = MPR_STATUS_STAGED;
     m->protocol = MPR_PROTO_UDP;
     ++g->staged_maps;
     return m;
@@ -483,9 +483,12 @@ void mpr_map_send(mpr_local_map m, mpr_time time)
     types = alloca(dst_slot->sig->len * sizeof(char));
 
     for (i = 0; i < m->num_inst; i++) {
+        /* Check if this instance has been updated */
         if (!get_bitflag(m->updated_inst, i))
             continue;
-        status = mpr_expr_eval(m->expr, src_vals, &m->vars, &dst_slot->val, &time, types, i);
+        /* TODO: Check if this instance has enough history to process the expression */
+        status = mpr_expr_eval(dev->expr_stack, m->expr, src_vals, &m->vars,
+                               &dst_slot->val, &time, types, i);
         if (!status)
             continue;
 
@@ -586,7 +589,8 @@ void mpr_map_receive(mpr_local_map m, mpr_time time)
 
         if (!get_bitflag(m->updated_inst, i))
             continue;
-        status = mpr_expr_eval(m->expr, src_vals, &m->vars, &dst_slot->val, &time, types, i);
+        status = mpr_expr_eval(m->rtr->dev->expr_stack, m->expr, src_vals,
+                               &m->vars, &dst_slot->val, &time, types, i);
         if (!status)
             continue;
 
@@ -656,7 +660,8 @@ void mpr_map_receive(mpr_local_map m, mpr_time time)
             mpr_sig_call_handler(dst_sig, evt, idmap ? idmap->LID : 0, 0, 0, &time, diff);
         }
 
-        /* TODO: break if map performs instance reduce */
+        if ((status & EXPR_EVAL_DONE) && !m->use_inst)
+            break;
     }
     clear_bitflags(m->updated_inst, m->num_inst);
     m->updated = 0;
@@ -805,8 +810,8 @@ static int _replace_expr_str(mpr_local_map m, const char *expr_str)
         src_types[i] = m->src[i]->sig->type;
         src_lens[i] = m->src[i]->sig->len;
     }
-    expr = mpr_expr_new_from_str(expr_str, m->num_src, src_types, src_lens,
-                                 m->dst->sig->type, m->dst->sig->len);
+    expr = mpr_expr_new_from_str(m->rtr->dev->expr_stack, expr_str, m->num_src, src_types,
+                                 src_lens, m->dst->sig->type, m->dst->sig->len);
     RETURN_ARG_UNLESS(expr, 1);
 
     /* expression update may force processing location to change
@@ -1174,7 +1179,8 @@ static int _set_expr(mpr_local_map m, const char *expr)
         /* evaluate expression to intialise literals */
         mpr_time_set(&now, MPR_NOW);
         for (i = 0; i < m->num_inst; i++)
-            mpr_expr_eval(m->expr, 0, &m->vars, &m->dst->val, &now, types, i);
+            mpr_expr_eval(m->rtr->dev->expr_stack, m->expr, 0, &m->vars,
+                          &m->dst->val, &now, types, i);
     }
     else {
         if (!m->expr && (   (MPR_LOC_DST == m->process_loc && m->dst->sig->is_local)
