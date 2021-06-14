@@ -37,4 +37,4 @@ to
 ```
 - This issue is fixed in newer versions of esp-idf and is fixed in arduino-esp32 v2.0.
 ## Updating library 
-- Run `update-library.sh`
+- Run `./update-library.sh`
