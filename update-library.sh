@@ -1,6 +1,11 @@
 #!/bin/sh
 cd -- "$(dirname "$BASH_SOURCE")"
 
+SEDOPTION=
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  SEDOPTION="''"
+fi
+
 rm -rf src
 mkdir src
 
@@ -16,7 +21,7 @@ cd libmapper
 ./autogen.sh
 mkdir -p ../../src/mapper
 # Include compat.h at beginning of each source file
-for i in src/*.c; do sed -i '' '1i\
+for i in src/*.c; do sed -i $SEDOPTION '1i\
 #include <compat.h>
 ' $i ; done
 cp src/*.c ../../src/mapper
@@ -31,7 +36,7 @@ cd liblo
 ./autogen.sh
 mkdir -p ../../src/lo
 # # Include compat.h at beginning of each source file
-for i in src/*.c; do sed -i '' '1i\
+for i in src/*.c; do sed -i $SEDOPTION '1i\
 #include <compat.h>
 ' $i ; done
 cp src/address.c ../../src/lo
