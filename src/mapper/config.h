@@ -98,7 +98,7 @@
 #define PACKAGE_NAME "libmapper"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "libmapper 1.2-342-g65095f15"
+#define PACKAGE_STRING "libmapper 1.2-346-g696aee21"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "libmapper"
@@ -107,7 +107,7 @@
 #define PACKAGE_URL "http://libmapper.org"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "1.2-342-g65095f15"
+#define PACKAGE_VERSION "1.2-346-g696aee21"
 
 /* printf code for type long long int */
 #define PRINTF_LL "ll"
@@ -120,7 +120,7 @@
 #define STDC_HEADERS 1
 
 /* Version number of package */
-#define VERSION "1.2-342-g65095f15"
+#define VERSION "1.2-346-g696aee21"
 
 /* Define to empty if `const' does not conform to ANSI C. */
 /* #undef const */

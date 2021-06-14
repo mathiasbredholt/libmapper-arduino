@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/sh
 cd -- "$(dirname "$BASH_SOURCE")"
 
 rm -rf src
