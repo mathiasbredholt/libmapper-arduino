@@ -16,7 +16,7 @@ mkdir -p tmp
 cd tmp
 
 # libmapper
-git clone git@github.com:mathiasbredholt/libmapper.git
+git clone https://github.com/mathiasbredholt/libmapper.git
 cd libmapper
 ./autogen.sh
 mkdir -p ../../src/mapper
@@ -31,7 +31,7 @@ cd ..
 rm -rf libmapper
 
 # liblo
-git clone git@github.com:radarsat1/liblo.git
+git clone https://github.com/radarsat1/liblo.git
 cd liblo
 ./autogen.sh
 mkdir -p ../../src/lo
@@ -57,7 +57,7 @@ cd ..
 rm -rf liblo
 
 # compat-idf
-git clone git@github.com:mathiasbredholt/compat-idf.git
+git clone https://github.com/mathiasbredholt/compat-idf.git
 cd compat-idf
 git checkout origin/v4.0
 mkdir -p ../../src/compat
@@ -68,7 +68,7 @@ cd ..
 rm -rf compat-idf
 
 # zlib
-git clone git@github.com:madler/zlib.git
+git clone https://github.com/madler/zlib.git
 cd zlib
 mkdir -p ../../src/zlib
 cp crc32.c ../../src/zlib
