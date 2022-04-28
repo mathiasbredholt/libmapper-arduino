@@ -14,5 +14,5 @@
 * To use the C API, add ```#include <mapper.h>``` to .ino file
 * A tutorial for libmapper C API is found [here](http://libmapper.github.io/tutorials/c.html)
 
-## Updating library 
+## Updating the library 
 - Run `./update-library.sh`
